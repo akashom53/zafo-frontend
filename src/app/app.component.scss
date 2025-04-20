@@ -1,0 +1,16 @@
+.app {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    max-height: 100vh;
+}
+
+.left-drawer {
+    flex: 2;
+    z-index: 10;
+}
+
+.main-activity {
+    flex: 7;
+    z-index: 9;
+}

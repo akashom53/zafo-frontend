@@ -1,0 +1,92 @@
+.drawer-item {
+    // background-color: #235C7A;
+    width: 100%;
+    height: 4rem;
+    cursor: pointer;
+
+    border-radius: .5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .item-icon {
+        width: 2rem;
+        height: 2rem;
+        padding-left: 1rem;
+    }
+
+    .item-title {
+        color: #9197B3;
+        margin-left: 1.2rem;
+    }
+}
+
+.drawer-item:hover {
+    background-color: #dae9f1;
+    transition-duration: 300ms;
+    width: 100%;
+    height: 4rem;
+
+    border-radius: .5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .item-icon {
+        width: 2rem;
+        height: 2rem;
+        padding-left: 1rem;
+    }
+
+    .item-title {
+        color: #9197B3;
+        margin-left: 1.2rem;
+    }
+}
+
+.active {
+    background-color: #235C7A;
+    width: 100%;
+    height: 4rem;
+    border-radius: .5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .item-icon {
+        width: 2rem;
+        height: 2rem;
+        padding-left: 1rem;
+    }
+
+    .item-title {
+        color: white;
+        margin-left: 1.2rem;
+    }
+}
+
+
+.active:hover {
+    background-color: #235C7A;
+    width: 100%;
+    height: 4rem;
+    border-radius: .5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .item-icon {
+        width: 2rem;
+        height: 2rem;
+        padding-left: 1rem;
+    }
+
+    .item-title {
+        color: white;
+        margin-left: 1.2rem;
+    }
+}

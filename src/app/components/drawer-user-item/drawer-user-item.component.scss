@@ -1,0 +1,29 @@
+.user-container {
+    margin: 3rem 0rem;
+    height: 4rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+
+    .user-img {
+        height: 3rem;
+    }
+
+    .name-role-container {
+        margin-left: 1.2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .name-text {
+        font-size: large;
+        font-weight: 600;
+    }
+
+    .role-text {
+        font-size: small;
+        color: #757575;
+    }
+}

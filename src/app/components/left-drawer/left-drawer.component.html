@@ -1,0 +1,16 @@
+<div class="container">
+    <div class="logo-version-container">
+        <img src="assets/img/zafo_logo@4x.png" alt="" class="logo">
+        <span class="version-text">v0.1</span>
+    </div>
+
+    <div class="drawer-items-container">
+        @for (item of items(); track $index) {
+
+        <app-drawer-item [item]="item" (click)="onClick($index)" />
+        }
+    </div>
+    <div class="user-container">
+        <app-drawer-user-item />
+    </div>
+</div>
