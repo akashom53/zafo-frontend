@@ -47,6 +47,7 @@
     margin-left: 4em;
     margin-right: 4em;
     column-gap: 2em;
+    transition: 300ms;
 }
 
 .chat-container {
@@ -145,5 +146,44 @@
             color: #ACACAC;
             font-size: 12px;
         }
+    }
+}
+
+.chat-msg-container {
+    height: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    // justify-content: end;
+    margin-left: 4em;
+    margin-right: 4em;
+    column-gap: 2em;
+    transition: 300ms;
+
+    .chat-msg {
+        padding: 1em;
+        max-width: 60%;
+        margin-bottom: 1em;
+        white-space: pre-line;
+    }
+
+    .send {
+        align-self: flex-end;
+        background-color: #F0F0F0;
+        border-radius: 1em 1em 0em 1em;
+    }
+
+
+    .recv {
+        align-self: flex-start;
+        color: white;
+        background-color: #8737FF;
+        border-radius: 1em 1em 1em 0em;
+        margin-bottom: 2em;
+    }
+
+    .first {
+        margin-top: auto;
     }
 }

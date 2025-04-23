@@ -3,20 +3,29 @@
         <span class="title">Hello {{user_first_name()}}</span>
         <input type="text" class="search" placeholder="Search" />
     </div>
-    <div class="dashboard-items-container" *ngif="showItems">
+    <div #chatContainer *ngIf="!showItems" class="chat-msg-container">
+        @for (item of chatItems(); track $index) {
+        <div class="chat-msg {{(item.sender == `self`)?`send`:`recv`}} {{($index==0)?'first': ''}}">
+            <span>{{item.message}}</span>
+        </div>
+        }
+
+    </div>
+
+    <div class="dashboard-items-container" *ngIf="showItems">
         <div class="recent">
             <span class="item-title">Recent Queries</span>
-            @for (i of [1,1,1,1]; track $index) {
-            <div class="query">
-                <span>Lorem ipsum dolor sit amet. Cum fuga minima eum soluta laborum a officia eveniet?</span>
+            @for (i of recentQs; track $index) {
+            <div class="query" (click)="onSend($index)">
+                <span>{{i}}</span>
             </div>
             }
         </div>
         <div class="recent">
             <span class="item-title">Most Used Queries</span>
-            @for (i of [1,1,1,1]; track $index) {
-            <div class="query">
-                <span>Lorem ipsum dolor sit amet. Cum fuga minima eum soluta laborum a officia eveniet?</span>
+            @for (i of mostUsedQs; track $index) {
+            <div class="query" (click)="onSend($index + 3)">
+                <span>{{i}}</span>
             </div>
             }
         </div>
@@ -24,7 +33,7 @@
     <div class="chat-container">
         <div class="chatbox">
             <textarea type="text" placeholder="Ask Zafo anything about your Product data!"></textarea>
-            <div class="send-button">
+            <div class="send-button" (click)="onSend()">
                 <img src="assets/img/send.png" alt="">
             </div>
         </div>
