@@ -1,0 +1,103 @@
+.container {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 2fr 4fr 1fr;
+    grid-template-columns: auto;
+    // padding: 2rem 4rem;
+}
+
+// .container:nth-child(n) {
+//     width: 100%;
+// }
+
+// .container:nth-child(odd) {
+//     height: 100px;
+// }
+
+.titleandsearch {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    padding-top: 3rem;
+}
+
+.title {
+    font-weight: 500;
+    font-size: 24px;
+}
+
+.search {
+    border: 0px;
+    padding: 1rem 1rem;
+    font-weight: 300;
+    font-size: medium;
+    font-family: "Poppins", sans-serif;
+    border-radius: 12px;
+    box-shadow: 0px 10px 60px 0px rgba(226, 236, 249, 0.5);
+}
+
+.dashboard-items-container {
+    width: 100%;
+    height: 100%;
+}
+
+.chat-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+}
+
+.chatbox {
+    width: 88%;
+    height: 50%;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0px 10px 60px 0px rgba(192, 203, 218, 0.5);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+}
+
+.chatbox textarea {
+    border: none;
+    font-weight: 300;
+    height: 90%;
+    font-size: medium;
+    font-family: "Poppins", sans-serif;
+    width: 92%;
+    padding: 10px;
+}
+
+.chatbox textarea:focus {
+    outline: none;
+}
+
+.send-button {
+    background-color: #235C7A;
+    transition-duration: 300ms;
+    width: 46px;
+    height: 80%;
+    margin-right: 6px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    img {
+        width: 50%;
+        height: 50%;
+    }
+}
+
+.send-button:hover {
+    background-color: #0d405c;
+
+
+}

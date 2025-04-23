@@ -1,0 +1,23 @@
+<div class="container">
+
+    <span class="title">Events</span>
+    <table>
+        <tr>
+            @for (item of headers; track $index) {
+            <th>
+                {{item}}
+            </th>
+            }
+        </tr>
+        @for (row of dataSource; track $index) {
+
+        <tr>
+            @for (item of values(row); track $index) {
+            <td>
+                {{displayVal(item)}}
+            </td>
+            }
+        </tr>
+        }
+    </table>
+</div>

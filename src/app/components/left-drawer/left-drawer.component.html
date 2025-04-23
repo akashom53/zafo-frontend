@@ -6,8 +6,7 @@
 
     <div class="drawer-items-container">
         @for (item of items(); track $index) {
-
-        <app-drawer-item [item]="item" (click)="onClick($index)" />
+        <app-drawer-item [item]="item" (click)="onDrawerItemClick(item)" />
         }
     </div>
     <div class="user-container">

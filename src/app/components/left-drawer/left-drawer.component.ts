@@ -9,8 +9,6 @@ import { DrawerUserItemComponent } from "../drawer-user-item/drawer-user-item.co
   styleUrl: './left-drawer.component.scss',
 })
 export class LeftDrawerComponent {
-
-
   items = signal([
     {
       title: "Dashboard",
@@ -38,8 +36,11 @@ export class LeftDrawerComponent {
     }
   ])
 
-
-  onClick(index: number) {
-    console.log(index)
+  onDrawerItemClick(clickedItem: any): void {
+    const updatedItems = this.items().map(item => ({
+      ...item,
+      isActive: item.title === clickedItem.title
+    }));
+    this.items.set(updatedItems);
   }
 }
