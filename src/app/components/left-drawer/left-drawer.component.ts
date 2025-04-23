@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { DrawerItemComponent } from "../drawer-item/drawer-item.component";
 import { DrawerUserItemComponent } from "../drawer-user-item/drawer-user-item.component";
+import { DrawerStateService } from "../../services/drawer-state.service";
 
 @Component({
   selector: 'app-left-drawer',
@@ -9,38 +10,13 @@ import { DrawerUserItemComponent } from "../drawer-user-item/drawer-user-item.co
   styleUrl: './left-drawer.component.scss',
 })
 export class LeftDrawerComponent {
-  items = signal([
-    {
-      title: "Dashboard",
-      isActive: true,
-    },
-    {
-      title: "Events",
-      isActive: false,
-    },
-    {
-      title: "User",
-      isActive: false,
-    },
-    {
-      title: "Billing",
-      isActive: false,
-    },
-    {
-      title: "Reports",
-      isActive: false,
-    },
-    {
-      title: "Support",
-      isActive: false,
-    }
-  ])
+  constructor(private drawerStateService: DrawerStateService) {}
+
+  get items() {
+    return this.drawerStateService.items;
+  }
 
   onDrawerItemClick(clickedItem: any): void {
-    const updatedItems = this.items().map(item => ({
-      ...item,
-      isActive: item.title === clickedItem.title
-    }));
-    this.items.set(updatedItems);
+    this.drawerStateService.setActiveItem(clickedItem.title);
   }
 }
