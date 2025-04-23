@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { DrawerStateService } from '../../services/drawer-state.service';
-import { LeftDrawerComponent } from '../left-drawer/left-drawer.component';
 
 
 @Component({

@@ -3,7 +3,7 @@
         <span class="title">Hello {{user_first_name()}}</span>
         <input type="text" class="search" placeholder="Search" />
     </div>
-    <div class="dashboard-items-container">
+    <div class="dashboard-items-container" *ngif="showItems">
         <div class="recent">
             <span class="item-title">Recent Queries</span>
             @for (i of [1,1,1,1]; track $index) {

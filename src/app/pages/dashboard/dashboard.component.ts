@@ -8,4 +8,5 @@ import { Component, signal } from '@angular/core';
 })
 export class DashboardComponent {
   user_first_name = signal("John")
+  showItems = signal(true)
 }
