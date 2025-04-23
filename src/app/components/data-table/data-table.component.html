@@ -1,7 +1,15 @@
 <div class="container">
-
     <span class="title">Events</span>
-    <table>
+
+    <div *ngIf="loading" class="loading">
+        <mat-spinner class="loader"></mat-spinner>
+    </div>
+
+    <div *ngIf="error" class="error">
+        {{ error }}
+    </div>
+
+    <table *ngIf="!loading && !error && dataSource.length > 0">
         <tr>
             @for (item of headers; track $index) {
             <th>
@@ -10,14 +18,17 @@
             }
         </tr>
         @for (row of dataSource; track $index) {
-
         <tr>
-            @for (item of values(row); track $index) {
-            <td>
-                {{displayVal(item)}}
-            </td>
-            }
+            <td>{{ displayVal(row.createdAt) }}</td>
+            <td>{{ row.tag }}</td>
+            <td>{{ row.group }}</td>
+            <td>{{ row.user.username }}</td>
+            <td>{{ displayVal(row.metaData) }}</td>
         </tr>
         }
     </table>
+
+    <div *ngIf="!loading && !error && dataSource.length === 0" class="no-data">
+        No events found.
+    </div>
 </div>

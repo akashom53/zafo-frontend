@@ -81,4 +81,14 @@
     tbody {
         border-top: 1px solid #f1f3f5;
     }
+
+    .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        /* Adjust this value based on your layout needs */
+    }
+
+
 }
