@@ -3,7 +3,24 @@
         <span class="title">Hello {{user_first_name()}}</span>
         <input type="text" class="search" placeholder="Search" />
     </div>
-    <div class="dashboard-items-container"></div>
+    <div class="dashboard-items-container">
+        <div class="recent">
+            <span class="item-title">Recent Queries</span>
+            @for (i of [1,1,1,1]; track $index) {
+            <div class="query">
+                <span>Lorem ipsum dolor sit amet. Cum fuga minima eum soluta laborum a officia eveniet?</span>
+            </div>
+            }
+        </div>
+        <div class="recent">
+            <span class="item-title">Most Used Queries</span>
+            @for (i of [1,1,1,1]; track $index) {
+            <div class="query">
+                <span>Lorem ipsum dolor sit amet. Cum fuga minima eum soluta laborum a officia eveniet?</span>
+            </div>
+            }
+        </div>
+    </div>
     <div class="chat-container">
         <div class="chatbox">
             <textarea type="text" placeholder="Ask Zafo anything about your Product data!"></textarea>

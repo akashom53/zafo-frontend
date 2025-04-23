@@ -38,32 +38,32 @@ export class DrawerStateService {
       isActive: false,
     },
     {
-      title: "Support",
-      route: "/support",
+      title: "Logout",
+      route: "/logout",
       isActive: false,
     }
   ]);
 
   items = this.itemsSignal.asReadonly();
-  
+
   activeItem = computed(() => {
     return this.itemsSignal().find(item => item.isActive);
   });
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   setActiveItem(title: string): void {
     const item = this.itemsSignal().find(item => item.title === title);
     if (item) {
       // Navigate to the corresponding route
       this.router.navigate([item.route]);
-      
+
       // Update the active state
       const updatedItems = this.itemsSignal().map(item => ({
         ...item,
         isActive: item.title === title
       }));
-      
+
       this.itemsSignal.set(updatedItems);
     }
   }

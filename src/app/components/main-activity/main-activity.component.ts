@@ -2,9 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { DrawerStateService } from '../../services/drawer-state.service';
-import { DashboardComponent } from '../../pages/dashboard/dashboard.component';
-import { DataTableComponent } from '../data-table/data-table.component';
-import { PlaceholderComponent } from '../placeholder/placeholder.component';
+import { LeftDrawerComponent } from '../left-drawer/left-drawer.component';
 
 
 @Component({
@@ -12,7 +10,7 @@ import { PlaceholderComponent } from '../placeholder/placeholder.component';
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet
+    RouterOutlet,
   ],
   templateUrl: './main-activity.component.html',
   styleUrl: './main-activity.component.scss'

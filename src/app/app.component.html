@@ -1,4 +1,12 @@
 <div class="app">
-  <app-left-drawer class="left-drawer" />
-  <app-main-activity class="main-activity" />
+  <!-- <router-outlet></router-outlet> -->
+  <!-- <app-login /> -->
+  <app-login *ngIf="!isLoggedIn" />
+
+  <ng-container *ngIf="isLoggedIn">
+    <app-left-drawer class="left-drawer" />
+    <app-main-activity class="main-activity" />
+  </ng-container>
+  <!-- <app-left-drawer class="left-drawer" />
+  <app-main-activity class="main-activity" /> -->
 </div>
