@@ -1,14 +1,3 @@
 <div class="container">
-
-    @switch (drawerStateService.activeItem()?.title) {
-    @case ('Dashboard') {
-    <app-dashboard></app-dashboard>
-    }
-    @case ('Events') {
-    <app-data-table></app-data-table>
-    }
-    @default {
-    <app-placeholder [title]="drawerStateService.activeItem()?.title || 'Component'"></app-placeholder>
-    }
-    }
+  <router-outlet></router-outlet>
 </div>

@@ -1,8 +1,9 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 export interface DrawerItem {
   title: string;
+  route: string;
   isActive: boolean;
 }
 
@@ -13,26 +14,32 @@ export class DrawerStateService {
   private itemsSignal = signal<DrawerItem[]>([
     {
       title: "Dashboard",
+      route: "/dashboard",
       isActive: true,
     },
     {
       title: "Events",
+      route: "/events",
       isActive: false,
     },
     {
       title: "User",
+      route: "/user",
       isActive: false,
     },
     {
       title: "Billing",
+      route: "/billing",
       isActive: false,
     },
     {
       title: "Reports",
+      route: "/reports",
       isActive: false,
     },
     {
       title: "Support",
+      route: "/support",
       isActive: false,
     }
   ]);
@@ -43,12 +50,21 @@ export class DrawerStateService {
     return this.itemsSignal().find(item => item.isActive);
   });
 
+  constructor(private router: Router) {}
+
   setActiveItem(title: string): void {
-    const updatedItems = this.itemsSignal().map(item => ({
-      ...item,
-      isActive: item.title === title
-    }));
-    
-    this.itemsSignal.set(updatedItems);
+    const item = this.itemsSignal().find(item => item.title === title);
+    if (item) {
+      // Navigate to the corresponding route
+      this.router.navigate([item.route]);
+      
+      // Update the active state
+      const updatedItems = this.itemsSignal().map(item => ({
+        ...item,
+        isActive: item.title === title
+      }));
+      
+      this.itemsSignal.set(updatedItems);
+    }
   }
 }

@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-placeholder',
@@ -29,6 +30,16 @@ import { CommonModule } from '@angular/common';
     }
   `]
 })
-export class PlaceholderComponent {
-  @Input() title: string = 'Component';
+export class PlaceholderComponent implements OnInit {
+  title: string = 'Component';
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.route.data.subscribe(data => {
+      if (data['title']) {
+        this.title = data['title'];
+      }
+    });
+  }
 }
