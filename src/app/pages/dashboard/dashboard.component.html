@@ -9,14 +9,12 @@
             <span>{{item.message}}</span>
 
             <!-- Display graph data if available -->
+            <!-- In the chat message section where you display graph data -->
             @if (item.isGraph) {
             <div class="graph-container">
-                <!-- Simple data display until we add a proper charting library -->
-                <div class="graph-placeholder">
-                    <p><strong>Graph Data:</strong> {{item.graphType}} chart showing {{item.yAxis}} over {{item.xAxis}}
-                    </p>
-                    <pre>{{item.graphData | json}}</pre>
-                </div>
+                <app-graph [data]="item.graphData || []" [type]="item.graphType || 'line'"
+                    [xAxis]="item.xAxis || 'Date'" [yAxis]="item.yAxis || 'Value'">
+                </app-graph>
             </div>
             }
         </div>

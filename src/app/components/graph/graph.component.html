@@ -1,0 +1,17 @@
+<div class="graph-container">
+    <div class="graph-header">
+        <h3>{{yAxis}} over {{xAxis}}</h3>
+        <p class="graph-type">{{type | titlecase}} Chart</p>
+    </div>
+
+    <div class="chart-container">
+        <canvas #chartCanvas></canvas>
+    </div>
+
+    <div class="chart-legend" *ngIf="labels.length > 0">
+        <div class="legend-item">
+            <span class="legend-color" [style.background-color]="'#007bff'"></span>
+            <span class="legend-label">{{yAxis || 'Value'}}</span>
+        </div>
+    </div>
+</div>

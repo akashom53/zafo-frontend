@@ -1,6 +1,7 @@
 import { Component, signal, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatServiceService } from '../../services/chat.service.service';
+import { GraphComponent } from '../../components/graph/graph.component';
 
 interface ChatItem {
   sender: string;
@@ -15,7 +16,8 @@ interface ChatItem {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, GraphComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -132,7 +134,7 @@ export class DashboardComponent {
       console.warn('Cannot send empty message');
       return;
     }
-    
+
     // Add user message to chat
     this.chatItems.update((items) => [
       ...items,
@@ -147,29 +149,29 @@ export class DashboardComponent {
         timestamp: new Date().toLocaleString()
       }
     ]);
-    
+
     // Clear the input field after sending
     if (this.chatInput) {
       this.chatInput.nativeElement.value = '';
     }
-    
+
     // Scroll to bottom after adding messages
     setTimeout(() => {
       this.scrollToBottom();
     }, 20);
-    
+
     // Call the chat service
     this.chatService.send(message.trim()).subscribe({
       next: (response) => {
         // Process the response
         const processedResponse = this.chatService.processResponse(response);
-        
+
         // Update the "Thinking..." message with the actual response
         this.chatItems.update((items) => {
           const newItems = [...items];
           // Replace the last item (which is "Thinking...")
           newItems.pop();
-          
+
           if (processedResponse.isGraph) {
             // Add a graph response
             newItems.push({
@@ -190,10 +192,10 @@ export class DashboardComponent {
               timestamp: new Date().toLocaleString()
             });
           }
-          
+
           return newItems;
         });
-        
+
         // Scroll to bottom after receiving response
         setTimeout(() => {
           this.scrollToBottom();
