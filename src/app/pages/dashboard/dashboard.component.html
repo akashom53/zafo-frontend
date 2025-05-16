@@ -7,9 +7,20 @@
         @for (item of chatItems(); track $index) {
         <div class="chat-msg {{(item.sender == `self`)?`send`:`recv`}} {{($index==0)?'first': ''}}">
             <span>{{item.message}}</span>
+
+            <!-- Display graph data if available -->
+            @if (item.isGraph) {
+            <div class="graph-container">
+                <!-- Simple data display until we add a proper charting library -->
+                <div class="graph-placeholder">
+                    <p><strong>Graph Data:</strong> {{item.graphType}} chart showing {{item.yAxis}} over {{item.xAxis}}
+                    </p>
+                    <pre>{{item.graphData | json}}</pre>
+                </div>
+            </div>
+            }
         </div>
         }
-
     </div>
 
     <div class="dashboard-items-container" *ngIf="showItems">

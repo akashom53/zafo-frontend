@@ -6,6 +6,11 @@ interface ChatItem {
   sender: string;
   message: string;
   timestamp: string;
+  isGraph?: boolean;
+  graphData?: any[];
+  graphType?: string;
+  xAxis?: string;
+  yAxis?: string;
 }
 
 @Component({
@@ -127,7 +132,7 @@ export class DashboardComponent {
       console.warn('Cannot send empty message');
       return;
     }
-
+    
     // Add user message to chat
     this.chatItems.update((items) => [
       ...items,
@@ -142,33 +147,53 @@ export class DashboardComponent {
         timestamp: new Date().toLocaleString()
       }
     ]);
-
+    
     // Clear the input field after sending
     if (this.chatInput) {
       this.chatInput.nativeElement.value = '';
     }
-
+    
     // Scroll to bottom after adding messages
     setTimeout(() => {
       this.scrollToBottom();
     }, 20);
-
+    
     // Call the chat service
     this.chatService.send(message.trim()).subscribe({
       next: (response) => {
+        // Process the response
+        const processedResponse = this.chatService.processResponse(response);
+        
         // Update the "Thinking..." message with the actual response
         this.chatItems.update((items) => {
           const newItems = [...items];
           // Replace the last item (which is "Thinking...")
           newItems.pop();
-          newItems.push({
-            sender: 'zafo',
-            message: response.message,
-            timestamp: response.timestamp || new Date().toLocaleString()
-          });
+          
+          if (processedResponse.isGraph) {
+            // Add a graph response
+            newItems.push({
+              sender: 'zafo',
+              message: processedResponse.summary || 'Here is a graph based on your query:',
+              timestamp: new Date().toLocaleString(),
+              isGraph: true,
+              graphData: processedResponse.graphData,
+              graphType: processedResponse.graphType,
+              xAxis: processedResponse.xAxis,
+              yAxis: processedResponse.yAxis
+            });
+          } else {
+            // Add a text response
+            newItems.push({
+              sender: 'zafo',
+              message: processedResponse.message || 'No response received',
+              timestamp: new Date().toLocaleString()
+            });
+          }
+          
           return newItems;
         });
-
+        
         // Scroll to bottom after receiving response
         setTimeout(() => {
           this.scrollToBottom();

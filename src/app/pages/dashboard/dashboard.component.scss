@@ -160,6 +160,7 @@
     margin-right: 4em;
     column-gap: 2em;
     transition: 300ms;
+    line-height: 2em;
 
     .chat-msg {
         padding: 1em;
@@ -185,5 +186,31 @@
 
     .first {
         margin-top: auto;
+    }
+}
+
+.graph-container {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.graph-placeholder {
+    background-color: #3a3d46;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 5px;
+
+    p {
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    pre {
+        background-color: #1a1a1f;
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        overflow-x: auto;
+        max-height: 200px;
     }
 }
