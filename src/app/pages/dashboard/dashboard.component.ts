@@ -1,6 +1,6 @@
-import { Component, signal, ElementRef, ViewChild, } from '@angular/core';
+import { Component, signal, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { ChatServiceService } from '../../services/chat.service.service';
 
 interface ChatItem {
   sender: string;
@@ -23,6 +23,9 @@ export class DashboardComponent {
 
   @ViewChild('chatContainer', { static: false })
   divChatContainer?: ElementRef;
+
+  @ViewChild('chatInput', { static: false })
+  chatInput?: ElementRef<HTMLTextAreaElement>;
 
   qLib = [
     `Which features have the highest drop-off rate?`,
@@ -102,8 +105,97 @@ export class DashboardComponent {
   }
 
   scrollToBottom() {
+
+    // if (this.divChatContainer && !this.showItems) {
+    //   this.divChatContainer.nativeElement.scrollTop = this.divChatContainer.nativeElement.scrollHeight;
+    // }
+
     const child = this.divChatContainer?.nativeElement.children[this.divChatContainer?.nativeElement.children.length - 1]
     console.log(child)
     child.scrollIntoView({ behavior: 'smooth' })
   }
+
+  constructor(private chatService: ChatServiceService) { }
+
+  /**
+   * Send a real chat message to the backend API
+   * @param message The message to send from the textarea
+   */
+  onSendReal(message: string): void {
+    // Validate the message
+    if (!message || message.trim() === '') {
+      console.warn('Cannot send empty message');
+      return;
+    }
+
+    // Add user message to chat
+    this.chatItems.update((items) => [
+      ...items,
+      {
+        sender: 'self',
+        message: message.trim(),
+        timestamp: new Date().toLocaleString()
+      },
+      {
+        sender: 'zafo',
+        message: 'Thinking...',
+        timestamp: new Date().toLocaleString()
+      }
+    ]);
+
+    // Clear the input field after sending
+    if (this.chatInput) {
+      this.chatInput.nativeElement.value = '';
+    }
+
+    // Scroll to bottom after adding messages
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 20);
+
+    // Call the chat service
+    this.chatService.send(message.trim()).subscribe({
+      next: (response) => {
+        // Update the "Thinking..." message with the actual response
+        this.chatItems.update((items) => {
+          const newItems = [...items];
+          // Replace the last item (which is "Thinking...")
+          newItems.pop();
+          newItems.push({
+            sender: 'zafo',
+            message: response.message,
+            timestamp: response.timestamp || new Date().toLocaleString()
+          });
+          return newItems;
+        });
+
+        // Scroll to bottom after receiving response
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 20);
+      },
+      error: (err) => {
+        console.error('Error sending chat message:', err);
+        // Update the "Thinking..." message with an error
+        this.chatItems.update((items) => {
+          const newItems = [...items];
+          // Replace the last item (which is "Thinking...")
+          newItems.pop();
+          newItems.push({
+            sender: 'zafo',
+            message: 'Sorry, I encountered an error processing your request.',
+            timestamp: new Date().toLocaleString()
+          });
+          return newItems;
+        });
+
+        // Scroll to bottom after error
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 20);
+      }
+    });
+  }
+
+
 }

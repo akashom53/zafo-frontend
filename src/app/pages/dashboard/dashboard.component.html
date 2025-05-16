@@ -16,7 +16,7 @@
         <div class="recent">
             <span class="item-title">Recent Queries</span>
             @for (i of recentQs; track $index) {
-            <div class="query" (click)="onSend($index)">
+            <div class="query" (click)="onSendReal(i)">
                 <span>{{i}}</span>
             </div>
             }
@@ -24,7 +24,7 @@
         <div class="recent">
             <span class="item-title">Most Used Queries</span>
             @for (i of mostUsedQs; track $index) {
-            <div class="query" (click)="onSend($index + 3)">
+            <div class="query" (click)="onSendReal(i)">
                 <span>{{i}}</span>
             </div>
             }
@@ -32,8 +32,8 @@
     </div>
     <div class="chat-container">
         <div class="chatbox">
-            <textarea type="text" placeholder="Ask Zafo anything about your Product data!"></textarea>
-            <div class="send-button" (click)="onSend()">
+            <textarea #chatInput type="text" placeholder="Ask Zafo anything about your Product data!"></textarea>
+            <div class="send-button" (click)="onSendReal(chatInput.value)">
                 <img src="assets/img/send.png" alt="">
             </div>
         </div>
