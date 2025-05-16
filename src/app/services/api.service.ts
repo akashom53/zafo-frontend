@@ -24,7 +24,7 @@ interface HttpOptions {
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'http://localhost:3000';
+  private baseUrl = 'https://zafo-backend-0f3426d8e515.herokuapp.com';
 
   constructor(private http: HttpClient) { }
 
