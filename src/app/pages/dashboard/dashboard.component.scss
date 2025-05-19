@@ -214,3 +214,9 @@
         max-height: 200px;
     }
 }
+
+.chat-wrapper {
+  grid-row: 2 / 4; // Span rows 2 and 3
+  margin: 0 4rem;
+  height: 100%;
+}

@@ -3,29 +3,12 @@
         <span class="title">Hello {{user_first_name()}}</span>
         <input type="text" class="search" placeholder="Search" />
     </div>
-    <div #chatContainer *ngIf="!showItems" class="chat-msg-container">
-        @for (item of chatItems(); track $index) {
-        <div class="chat-msg {{(item.sender == `self`)?`send`:`recv`}} {{($index==0)?'first': ''}}">
-            <span>{{item.message}}</span>
-
-            <!-- Display graph data if available -->
-            <!-- In the chat message section where you display graph data -->
-            @if (item.isGraph) {
-            <div class="graph-container">
-                <app-graph [data]="item.graphData || []" [type]="item.graphType || 'line'"
-                    [xAxis]="item.xAxis || 'Date'" [yAxis]="item.yAxis || 'Value'">
-                </app-graph>
-            </div>
-            }
-        </div>
-        }
-    </div>
-
-    <div class="dashboard-items-container" *ngIf="showItems">
+    
+    <div class="dashboard-items-container" *ngIf="!chatComponent || chatComponent.messages().length === 0">
         <div class="recent">
             <span class="item-title">Recent Queries</span>
             @for (i of recentQs; track $index) {
-            <div class="query" (click)="onSendReal(i)">
+            <div class="query" (click)="onQueryClick(i)">
                 <span>{{i}}</span>
             </div>
             }
@@ -33,18 +16,20 @@
         <div class="recent">
             <span class="item-title">Most Used Queries</span>
             @for (i of mostUsedQs; track $index) {
-            <div class="query" (click)="onSendReal(i)">
+            <div class="query" (click)="onQueryClick(i)">
                 <span>{{i}}</span>
             </div>
             }
         </div>
     </div>
-    <div class="chat-container">
-        <div class="chatbox">
-            <textarea #chatInput type="text" placeholder="Ask Zafo anything about your Product data!"></textarea>
-            <div class="send-button" (click)="onSendReal(chatInput.value)">
-                <img src="assets/img/send.png" alt="">
-            </div>
-        </div>
+    
+    <div class="chat-wrapper">
+        <app-chat 
+            [placeholder]="'Ask Zafo anything about your Product data!'"
+            [botName]="'Zafo'"
+            [userSenderName]="'self'"
+            [botSenderName]="'zafo'"
+            (messageSent)="onMessageSent($event)">
+        </app-chat>
     </div>
 </div>

@@ -1,39 +1,20 @@
+// Update imports
 import { Component, signal, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatServiceService } from '../../services/chat.service.service';
-import { GraphComponent } from '../../components/graph/graph.component';
-
-interface ChatItem {
-  sender: string;
-  message: string;
-  timestamp: string;
-  isGraph?: boolean;
-  graphData?: any[];
-  graphType?: string;
-  xAxis?: string;
-  yAxis?: string;
-}
+import { ChatComponent, ChatMessage } from '../../components/chat/chat.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, GraphComponent],
+  imports: [CommonModule, ChatComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
-  user_first_name = signal("John")
-  get showItems() { return this.chatItems().length == 0 }
-  chatItems = signal<ChatItem[]>([])
+  user_first_name = signal("John");
 
-  chatIndex = 0;
-
-  @ViewChild('chatContainer', { static: false })
-  divChatContainer?: ElementRef;
-
-  @ViewChild('chatInput', { static: false })
-  chatInput?: ElementRef<HTMLTextAreaElement>;
-
+  // Libraries of questions and answers
   qLib = [
     `Which features have the highest drop-off rate?`,
     `What features are being used the most this week?`,
@@ -53,176 +34,65 @@ export class DashboardComponent {
   ]
 
   get recentQs() {
-    return this.qLib.slice(0, 3)
+    return this.qLib.slice(0, 3);
   }
 
   get mostUsedQs() {
-    return this.qLib.slice(3, 6)
-  }
-
-  generateSend(index?: number) {
-    return this.qLib[index ?? (this.chatIndex % this.qLib.length)]
-  }
-
-  generateRecv(index?: number) {
-    let temp = this.chatIndex
-    if (!index) {
-
-      this.chatIndex++
-    }
-    return this.aLib[index ?? (temp % this.qLib.length)]
-  }
-
-  onSend(index?: number) {
-    this.chatItems.update((items) => [
-      ...items,
-      {
-        sender: 'self',
-        message: this.generateSend(index),
-        timestamp: new Date().toLocaleString()
-      },
-      {
-        sender: 'zafo',
-        message: 'Thinking...',
-        timestamp: new Date().toLocaleString()
-      }
-    ])
-    setTimeout(() => {
-      this.scrollToBottom()
-    }, 20)
-    setTimeout(() => {
-      this.addReply(index)
-    }, 500)
-  }
-
-  addReply(index?: number) {
-    console.log('reply')
-    this.chatItems.update((t) => {
-      t.pop()
-      t.push({
-        sender: 'zafo',
-        message: this.generateRecv(index),
-        timestamp: new Date().toLocaleString()
-      })
-      setTimeout(() => {
-        this.scrollToBottom()
-      }, 20)
-      return t
-    })
-  }
-
-  scrollToBottom() {
-
-    // if (this.divChatContainer && !this.showItems) {
-    //   this.divChatContainer.nativeElement.scrollTop = this.divChatContainer.nativeElement.scrollHeight;
-    // }
-
-    const child = this.divChatContainer?.nativeElement.children[this.divChatContainer?.nativeElement.children.length - 1]
-    console.log(child)
-    child.scrollIntoView({ behavior: 'smooth' })
+    return this.qLib.slice(3, 6);
   }
 
   constructor(private chatService: ChatServiceService) { }
 
+  // Reference to the chat component
+  @ViewChild(ChatComponent) chatComponent?: ChatComponent;
+
   /**
-   * Send a real chat message to the backend API
-   * @param message The message to send from the textarea
+   * Handle when a message is sent from the chat component
    */
-  onSendReal(message: string): void {
-    // Validate the message
-    if (!message || message.trim() === '') {
-      console.warn('Cannot send empty message');
-      return;
-    }
-
-    // Add user message to chat
-    this.chatItems.update((items) => [
-      ...items,
-      {
-        sender: 'self',
-        message: message.trim(),
-        timestamp: new Date().toLocaleString()
-      },
-      {
-        sender: 'zafo',
-        message: 'Thinking...',
-        timestamp: new Date().toLocaleString()
-      }
-    ]);
-
-    // Clear the input field after sending
-    if (this.chatInput) {
-      this.chatInput.nativeElement.value = '';
-    }
-
-    // Scroll to bottom after adding messages
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 20);
-
+  onMessageSent(message: string): void {
     // Call the chat service
-    this.chatService.send(message.trim()).subscribe({
+    this.chatService.send(message).subscribe({
       next: (response) => {
         // Process the response
+        console.log('Chat response:', response);
         const processedResponse = this.chatService.processResponse(response);
 
-        // Update the "Thinking..." message with the actual response
-        this.chatItems.update((items) => {
-          const newItems = [...items];
-          // Replace the last item (which is "Thinking...")
-          newItems.pop();
-
-          if (processedResponse.isGraph) {
-            // Add a graph response
-            newItems.push({
-              sender: 'zafo',
-              message: processedResponse.summary || 'Here is a graph based on your query:',
-              timestamp: new Date().toLocaleString(),
-              isGraph: true,
-              graphData: processedResponse.graphData,
-              graphType: processedResponse.graphType,
-              xAxis: processedResponse.xAxis,
-              yAxis: processedResponse.yAxis
-            });
-          } else {
-            // Add a text response
-            newItems.push({
-              sender: 'zafo',
-              message: processedResponse.message || 'No response received',
-              timestamp: new Date().toLocaleString()
-            });
-          }
-
-          return newItems;
-        });
-
-        // Scroll to bottom after receiving response
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 20);
+        if (processedResponse.isGraph) {
+          // Add a graph response
+          this.chatComponent?.addBotMessage({
+            message: processedResponse.summary || 'Here is a graph based on your query:',
+            isGraph: true,
+            graphData: processedResponse.graphData,
+            graphType: processedResponse.graphType,
+            xAxis: processedResponse.xAxis,
+            yAxis: processedResponse.yAxis
+          });
+        } else {
+          // Add a text response
+          this.chatComponent?.addBotMessage(
+            processedResponse.message || 'No response received'
+          );
+        }
       },
       error: (err) => {
         console.error('Error sending chat message:', err);
-        // Update the "Thinking..." message with an error
-        this.chatItems.update((items) => {
-          const newItems = [...items];
-          // Replace the last item (which is "Thinking...")
-          newItems.pop();
-          newItems.push({
-            sender: 'zafo',
-            message: 'Sorry, I encountered an error processing your request.',
-            timestamp: new Date().toLocaleString()
-          });
-          return newItems;
-        });
-
-        // Scroll to bottom after error
-        setTimeout(() => {
-          this.scrollToBottom();
-        }, 20);
+        this.chatComponent?.addBotMessage(
+          'Sorry, I encountered an error processing your request.'
+        );
       }
     });
   }
 
+  /**
+   * Handle when a predefined query is clicked
+   */
+  onQueryClick(query: string): void {
+    if (this.chatComponent) {
+      // Add the query as a user message
+      this.chatComponent.addUserMessage(query);
 
+      // Process the query
+      this.onMessageSent(query);
+    }
+  }
 }
