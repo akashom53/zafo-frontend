@@ -12,6 +12,7 @@ export interface ChatMessage {
   graphType?: string;
   xAxis?: string;
   yAxis?: string;
+  isExpanded?: boolean; // Track if a long message is expanded
 }
 
 @Component({
@@ -44,6 +45,10 @@ export class ChatComponent implements AfterViewInit {
    * Add a user message to the chat
    * @param message The message text
    */
+  /**
+   * Add a user message to the chat
+   * @param message The message text
+   */
   addUserMessage(message: string): void {
     if (!message || message.trim() === '') {
       return;
@@ -54,7 +59,8 @@ export class ChatComponent implements AfterViewInit {
       {
         sender: this.userSenderName,
         message: message.trim(),
-        timestamp: new Date().toLocaleString()
+        timestamp: new Date().toLocaleString(),
+        isExpanded: false
       }
     ]);
 
@@ -78,7 +84,8 @@ export class ChatComponent implements AfterViewInit {
       botMessage = {
         sender: this.botSenderName,
         message: message,
-        timestamp: new Date().toLocaleString()
+        timestamp: new Date().toLocaleString(),
+        isExpanded: false
       };
     } else {
       botMessage = {
@@ -89,10 +96,18 @@ export class ChatComponent implements AfterViewInit {
         graphData: message.graphData,
         graphType: message.graphType,
         xAxis: message.xAxis,
-        yAxis: message.yAxis
+        yAxis: message.yAxis,
+        isExpanded: false
       };
     }
 
+    if (this.messages()[this.messages().length - 1].message === "Thinking...") {
+      this.messages.update(msgs => {
+        const newMsgs = [...msgs];
+        newMsgs.pop(); // Remove the thinking message
+        return newMsgs;
+      });
+    }
     this.messages.update(msgs => [...msgs, botMessage]);
 
     // Scroll to bottom
@@ -168,13 +183,58 @@ export class ChatComponent implements AfterViewInit {
   }
 
   /**
-   * Scroll the chat container to the bottom
+   * Scroll the chat container to the bottom with smooth animation
    */
   scrollToBottom(): void {
     if (!this.chatContainer) return;
 
     const element = this.chatContainer.nativeElement;
-    element.scrollTop = element.scrollHeight;
+    element.scrollTo({
+      top: element.scrollHeight,
+      behavior: 'smooth'
+    });
+  }
+
+  /**
+   * Toggle the expanded state of a message
+   * @param index The index of the message to toggle
+   */
+  toggleMessageExpansion(index: number): void {
+    this.messages.update(msgs => {
+      const newMsgs = [...msgs];
+      newMsgs[index] = {
+        ...newMsgs[index],
+        isExpanded: !newMsgs[index].isExpanded
+      };
+      if (newMsgs[index].isExpanded) {
+        setTimeout(() => this.scrollToBottom(), 20);
+      }
+      return newMsgs;
+    });
+  }
+
+  /**
+   * Check if a message needs truncation based on visual line count
+   * @param message The message text to check
+   * @returns True if the message needs truncation
+   */
+  needsTruncation(message: string): boolean {
+    // First check explicit newlines
+    const newlineCount = (message.match(/\n/g) || []).length;
+    if (newlineCount > 3) return true;
+
+    // If no explicit newlines or fewer than 3, check for visual wrapping
+    // Estimate ~50 chars per line in a typical chat bubble
+    const averageCharsPerLine = 50;
+    const estimatedLines = Math.ceil(message.length / averageCharsPerLine);
+
+    // Count markdown headers and list items as they often start new lines visually
+    const markdownLineBreaks = (message.match(/^(#{1,6} |[*-] |\d+\. )/gm) || []).length;
+
+    // Calculate total estimated visual lines
+    const totalEstimatedLines = Math.max(newlineCount + 1, estimatedLines) + markdownLineBreaks;
+
+    return totalEstimatedLines > 3 || message.length > 150;
   }
 
   ngAfterViewInit(): void {

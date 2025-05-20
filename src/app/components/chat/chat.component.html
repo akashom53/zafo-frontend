@@ -1,50 +1,61 @@
 <div class="chat-component">
-  <!-- Optional header -->
-  <div class="chat-header" *ngIf="showHeader">
-    <h2>{{headerTitle}}</h2>
-  </div>
-  
-  <!-- Messages container -->
-  <div #chatContainer class="chat-messages">
-    @for (message of messages(); track $index) {
-      <div class="chat-message {{(message.sender === userSenderName) ? 'user-message' : 'bot-message'}}">
-        <div class="message-content">
-          <!-- Use markdown component for bot messages -->
-          @if (message.sender === botSenderName) {
-            <markdown [data]="message.message"></markdown>
-          } @else {
-            <span>{{message.message}}</span>
-          }
-          
-          <!-- Display graph if available -->
-          @if (message.isGraph) {
-            <div class="graph-container">
-              <app-graph 
-                [data]="message.graphData || []" 
-                [type]="message.graphType || 'line'"
-                [xAxis]="message.xAxis || 'Date'" 
-                [yAxis]="message.yAxis || 'Value'">
-              </app-graph>
+    <!-- Optional header -->
+    <div class="chat-header" *ngIf="showHeader">
+        <h2>{{headerTitle}}</h2>
+    </div>
+
+    <!-- Messages container -->
+    <div #chatContainer class="chat-messages">
+        @for (message of messages(); track $index) {
+        <div class="chat-message {{(message.sender === userSenderName) ? 'user-message' : 'bot-message'}}">
+            <div class="message-content">
+                <!-- Use markdown component for bot messages -->
+                @if (message.sender === botSenderName) {
+                @if (needsTruncation(message.message) && !message.isExpanded) {
+                <div class="truncated-message">
+                    <markdown [data]="message.message.split('\n').slice(0, 3).join('\n') + '...'"></markdown>
+                    <button class="show-more-button" (click)="toggleMessageExpansion($index)">Show more</button>
+                </div>
+                } @else {
+                <markdown [data]="message.message"></markdown>
+                @if (needsTruncation(message.message) && message.isExpanded) {
+                <button class="show-less-button" (click)="toggleMessageExpansion($index)">Show less</button>
+                }
+                }
+                } @else {
+                @if (needsTruncation(message.message) && !message.isExpanded) {
+                <div class="truncated-message">
+                    <span>{{message.message.split('\n').slice(0, 3).join('\n') + '...'}}</span>
+                    <button class="show-more-button" (click)="toggleMessageExpansion($index)">Show more</button>
+                </div>
+                } @else {
+                <span>{{message.message}}</span>
+                @if (needsTruncation(message.message) && message.isExpanded) {
+                <button class="show-less-button" (click)="toggleMessageExpansion($index)">Show less</button>
+                }
+                }
+                }
+
+                <!-- Display graph if available -->
+                @if (message.isGraph) {
+                <div class="graph-container">
+                    <app-graph [data]="message.graphData || []" [type]="message.graphType || 'line'"
+                        [xAxis]="message.xAxis || 'Date'" [yAxis]="message.yAxis || 'Value'">
+                    </app-graph>
+                </div>
+                }
             </div>
-          }
+            <div class="message-timestamp">{{message.timestamp}}</div>
         </div>
-        <div class="message-timestamp">{{message.timestamp}}</div>
-      </div>
-    }
-  </div>
-  
-  <!-- Input area -->
-  <div class="chat-input-container">
-    <textarea 
-      #chatInput 
-      class="chat-input" 
-      placeholder="{{placeholder}}" 
-      (input)="adjustTextareaHeight()"
-      (keydown.enter)="$event.preventDefault(); onSend()"
-    ></textarea>
-    <button class="send-button" (click)="onSend()">
-      <img src="assets/img/send.png" alt="Send">
-    </button>
-  </div>
+        }
+    </div>
+
+    <!-- Input area -->
+    <div class="chat-input-container">
+        <textarea #chatInput class="chat-input" placeholder="{{placeholder}}" (input)="adjustTextareaHeight()"
+            (keydown.enter)="$event.preventDefault(); onSend()"></textarea>
+        <button class="send-button" (click)="onSend()">
+            <img src="assets/img/send.png" alt="Send">
+        </button>
+    </div>
 </div>
-<p>chat works!</p>

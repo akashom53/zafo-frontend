@@ -51,6 +51,7 @@ export class DashboardComponent {
    */
   onMessageSent(message: string): void {
     // Call the chat service
+    this.chatComponent?.addThinkingMessage();
     this.chatService.send(message).subscribe({
       next: (response) => {
         // Process the response
